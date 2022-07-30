@@ -10,9 +10,10 @@ async def test_mux(dut):
     """Test for mux2"""
     inp=[]
     for i in range(31): 
-        inp.append(random.randint(0,3))
+        inp.append(1)
+        # inp.append(random.randint(0,3))
 
-    dut.inp0.value=1
+    dut.inp0.value=inp[0]
     dut.inp1.value=inp[1]
     dut.inp2.value=inp[2]
     dut.inp3.value=inp[3]
@@ -43,12 +44,23 @@ async def test_mux(dut):
     dut.inp28.value=inp[28]
     dut.inp29.value=inp[29]
     dut.inp30.value=inp[30]
-    for i in range(0,30):
-        dut.sel.value=random.randint(0,30)
-        dut._log.info(f'sel={dut.sel.value:05} inp={inp[dut.sel.value]:05} out={dut.out.value:05} ')
+    out = []
+    for i in range(31):
+        A = i
+        dut.sel.value = A
         await Timer(2, units='ns')
-        assert dut.out.value == inp[dut.sel.value]
-        
+        try:
+            assert dut.out.value == inp[dut.sel.value], "error"
+        except:
+            out.append(dut.out.value)
+            dut._log.info(f'ERROR sel={A} inp={inp[dut.sel.value]} out={dut.out.value} expected_output={inp[dut.sel.value]}')
+            continue
+    
+    
+    dut._log.info(f'{(len(out))}')
+    assert len(out) == 0, "error"
+    
+
 
 
    
