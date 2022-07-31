@@ -22,5 +22,60 @@ async def test_seq_bug1(dut):
     await FallingEdge(dut.clk)  
     dut.reset.value = 0
     await FallingEdge(dut.clk)
-
     cocotb.log.info('#### CTB: Develop your test here! ######')
+
+    dut.inp_bit.value = 1
+    await FallingEdge(dut.clk)
+    dut.inp_bit.value=0
+    await FallingEdge(dut.clk)
+    dut.inp_bit.value=1
+    await FallingEdge(dut.clk)
+    dut.inp_bit.value=1
+    await FallingEdge(dut.clk)
+    dut.inp_bit.value=0
+    await FallingEdge(dut.clk)
+    errors=[]
+    try:
+            assert dut.seq_seen.value == 1, "error"
+    except:
+            errors.append(dut.seq_seen.value)
+            dut._log.info(f'ERROR input={dut.inp_bit.value} state={dut.current_state.value} out={dut.seq_seen.value} expected_output={1}')
+              
+
+    dut.reset.value = 1
+    await FallingEdge(dut.clk) 
+    dut._log.info(f' state={dut.current_state.value} inp={dut.inp_bit.value} ') 
+    dut.reset.value = 0
+    await FallingEdge(dut.clk)
+    dut._log.info(f' state={dut.current_state.value} inp={dut.inp_bit.value} ')
+    cocotb.log.info('#### CTB: Develop your test here! ######')
+
+    dut.inp_bit.value = 1
+    await FallingEdge(dut.clk)
+    dut._log.info(f' state={dut.current_state.value} inp={dut.inp_bit.value} ')
+    dut.inp_bit.value = 1
+    await FallingEdge(dut.clk)
+    dut._log.info(f' state={dut.current_state.value} inp={dut.inp_bit.value} ')
+    dut.inp_bit.value=0
+    await FallingEdge(dut.clk)
+    dut._log.info(f' state={dut.current_state.value} inp={dut.inp_bit.value} ')
+    dut.inp_bit.value=1
+    await FallingEdge(dut.clk)
+    dut._log.info(f' state={dut.current_state.value} inp={dut.inp_bit.value} ')
+    dut.inp_bit.value=1
+    await FallingEdge(dut.clk)
+    dut._log.info(f' state={dut.current_state.value} inp={dut.inp_bit.value} ')
+    dut.inp_bit.value=1
+    await FallingEdge(dut.clk)
+
+    try:
+            assert dut.seq_seen.value == 1, "error"
+    except:
+            errors.append(dut.seq_seen.value)
+            dut._log.info(f'ERROR input={dut.inp_bit.value} state={dut.current_state.value} out={dut.seq_seen.value} expected_output={1}')
+            
+
+    
+    
+
+    
