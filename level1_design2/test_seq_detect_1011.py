@@ -114,7 +114,8 @@ async def test_seq_bug1(dut):
             errors.append(dut.seq_seen.value)
             dut._log.info(f'ERROR at input={dut.inp_bit.value} state={dut.current_state.value} out={dut.seq_seen.value} expected_output={1}')
             dut._log.info(f'BUG_3 Sequence is not at all detected even in same clock cycle. Bug in state transition')
-            
+    dut._log.info(f'total bug = {(len(errors))}')
+    assert len(errors) == 0, "error"
     
 
     
