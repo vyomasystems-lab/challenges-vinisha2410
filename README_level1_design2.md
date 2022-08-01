@@ -3,7 +3,7 @@
 The verification environment is setup using [Vyoma's UpTickPro](https://vyomasystems.com) provided for the hackathon.
 
 
-![]([https://i.imgur.com/miWGA1o.png](https://github.com/vyomasystems-lab/challenges-vinisha2410/blob/master/images/Gitpod%20id.png))
+![](https://github.com/vyomasystems-lab/challenges-vinisha2410/blob/master/images/Gitpod%20id.png))
 
 ## Verification Environment
 
@@ -116,13 +116,15 @@ SEQ_1011:
  
 ```
 In SEQ_1 case, the next_state under if block should be SEQ_1
+
 In SEQ_101 case, the next_state under else block should be SEQ_10
+
 In SEQ_1011 case, if inp_bit=1, next_state= SEQ_1 else next_state= SEQ_10
 
 ## Design Fix
 Updating the design and re-running the test makes the test pass.
 
-![]([https://i.imgur.com/5XbL1ZH.png](https://github.com/vyomasystems-lab/challenges-vinisha2410/blob/master/images/seq_passed_test.png))
+![](https://github.com/vyomasystems-lab/challenges-vinisha2410/blob/master/images/seq_passed_test.png))
 
 The updated design is provided in corrected_design folder
 
