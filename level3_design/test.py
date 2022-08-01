@@ -26,8 +26,8 @@ async def test_seq(dut):
     dut._log.info(f'initial   state={dut.current_state.value} ') 
 
     dut.inp.value = 1111
-    await RisingEdge(dut.clk)
-    #await Timer(20, units='us')
+    #await RisingEdge(dut.clk)
+    await Timer(20, units='us')
     dut._log.info(f'inp={int(dut.inp.value)}  access={dut.access.value} alarm={dut.alarm.value} count={dut.count.value}') 
     dut.inp.value = 1222
     #await RisingEdge(dut.clk)
@@ -39,13 +39,10 @@ async def test_seq(dut):
     dut.inp.value = 1444
     dut._log.info(f'inp={int(dut.inp.value)}   access={dut.access.value} alarm={dut.alarm.value} count={dut.count.value}')
     await Timer(20, units='us')
-    dut.inp.value = 1234
-    await Timer(20, units='us')
-    dut._log.info(f'inp={int(dut.inp.value)}  state={dut.current_state.value} access={dut.access.value} alarm={dut.alarm.value} count={dut.count.value}')
-    #dut.inp.value = 1134
-    await Timer(20, units='us')
-    dut._log.info(f'inp={int(dut.inp.value)}   access={dut.access.value} alarm={dut.alarm.value} count={dut.count.value}')
+    dut.inp.value = 1555
+    dut._log.info(f'inp={int(dut.inp.value)}  access={dut.access.value} alarm={dut.alarm.value} count={dut.count.value}')
 
+    assert dut.alarm.value==1, "alarm doesnt go high at count={count}".format(count=dut.count.value)
     
 
     

@@ -1,121 +1,49 @@
 # See LICENSE.vyoma for details
 
-# SPDX-License-Identifier: CC0-1.0
-
 import os
 import random
 from pathlib import Path
 
 import cocotb
 from cocotb.clock import Clock
-from cocotb.triggers import RisingEdge, FallingEdge
+from cocotb.triggers import RisingEdge, FallingEdge, Timer
 
 @cocotb.test()
-async def test_seq_bug1(dut):
+async def test_seq(dut):
     """Test for seq detection """
 
     clock = Clock(dut.clk, 10, units="us")  # Create a 10us period clock on port clk
     cocotb.start_soon(clock.start())        # Start the clock
 
     # reset
+    
     dut.reset.value = 1
-    await FallingEdge(dut.clk)  
+    await RisingEdge(dut.clk)   
     dut.reset.value = 0
-    await FallingEdge(dut.clk)
-    cocotb.log.info('#### CTB: Develop your test here! ######')
+    
+    dut._log.info(f'initial   state={dut.current_state.value} ') 
 
-    dut.inp_bit.value = 1
-    await FallingEdge(dut.clk)
-    dut._log.info(f'inp={dut.inp_bit.value}  state={dut.current_state.value} out={dut.seq_seen.value}') 
-    dut.inp_bit.value=0
-    await FallingEdge(dut.clk)
-    dut._log.info(f'inp={dut.inp_bit.value}  state={dut.current_state.value} out={dut.seq_seen.value}') 
-    dut.inp_bit.value=1
-    await FallingEdge(dut.clk)
-    dut._log.info(f'inp={dut.inp_bit.value}  state={dut.current_state.value} out={dut.seq_seen.value}') 
-    dut.inp_bit.value=1
-    await FallingEdge(dut.clk)
-    dut._log.info(f'inp={dut.inp_bit.value}  state={dut.current_state.value} out={dut.seq_seen.value} ') 
-    dut.inp_bit.value=0
-    await FallingEdge(dut.clk)
-    dut._log.info(f'inp={dut.inp_bit.value}  state={dut.current_state.value} out={dut.seq_seen.value}') 
-    errors=[]
-    try:
-            assert dut.seq_seen.value == 1, "error"
-    except:
-            errors.append(dut.seq_seen.value)
-            dut._log.info(f'ERROR at input={dut.inp_bit.value} state={dut.current_state.value} out={dut.seq_seen.value} expected_output={1}')
-            dut._log.info(f'BUG_1: Output is not seen after one clock cycle instead it is seen at same clock cycle')
-              
+    dut.inp.value = 1111
+    #await RisingEdge(dut.clk)
+    await Timer(20, units='us')
+    dut._log.info(f'inp={int(dut.inp.value)}  access={dut.access.value} alarm={dut.alarm.value} count={dut.count.value}') 
+    dut.inp.value = 1222
+    #await RisingEdge(dut.clk)
+    await Timer(20, units='us')
+    dut.inp.value = 1333
+    dut._log.info(f'inp={int(dut.inp.value)}   access={dut.access.value} alarm={dut.alarm.value} count={dut.count.value}')
+    #await RisingEdge(dut.clk)
+    await Timer(20, units='us')
+    dut.inp.value = 1444
+    dut._log.info(f'inp={int(dut.inp.value)}   access={dut.access.value} alarm={dut.alarm.value} count={dut.count.value}')
+    await Timer(20, units='us')
+    dut.inp.value = 1555
+    dut._log.info(f'inp={int(dut.inp.value)}  access={dut.access.value} alarm={dut.alarm.value} count={dut.count.value}')
 
-    dut.reset.value = 1
-    await FallingEdge(dut.clk) 
-    dut._log.info(f' state={dut.current_state.value} inp={dut.inp_bit.value} out={dut.seq_seen.value} ') 
-    dut.reset.value = 0
-    await FallingEdge(dut.clk)
-    dut._log.info(f' state={dut.current_state.value} inp={dut.inp_bit.value} out={dut.seq_seen.value}')
-    cocotb.log.info('#### CTB: Develop your test here! ######')
-
-    dut.inp_bit.value = 1
-    await FallingEdge(dut.clk)
-    dut._log.info(f'inp={dut.inp_bit.value} state={dut.current_state.value} out={dut.seq_seen.value}')
-    dut.inp_bit.value = 1
-    await FallingEdge(dut.clk)
-    dut._log.info(f'inp={dut.inp_bit.value} state={dut.current_state.value}  out={dut.seq_seen.value}')
-    dut.inp_bit.value=0
-    await FallingEdge(dut.clk)
-    dut._log.info(f'inp={dut.inp_bit.value} state={dut.current_state.value} out={dut.seq_seen.value} ')
-    dut.inp_bit.value=1
-    await FallingEdge(dut.clk)
-    dut._log.info(f'inp={dut.inp_bit.value} state={dut.current_state.value} out={dut.seq_seen.value} ')
-    dut.inp_bit.value=1
-    await FallingEdge(dut.clk)
-    dut._log.info(f'inp={dut.inp_bit.value} state={dut.current_state.value} out={dut.seq_seen.value} ')
-   
-    try:
-            assert dut.seq_seen.value == 1, "error"
-    except:
-            errors.append(dut.seq_seen.value)
-            dut._log.info(f'ERROR at input={dut.inp_bit.value} state={dut.current_state.value} out={dut.seq_seen.value} expected_output={1}')
-            dut._log.info(f'BUG_2: Sequence is not at all detected even in same clock cycle. Bug in state transition')
-            
-    dut.inp_bit.value=0
-    await FallingEdge(dut.clk)
-    dut.reset.value = 1
-    await FallingEdge(dut.clk) 
-    dut._log.info(f' state={dut.current_state.value} inp={dut.inp_bit.value} ') 
-    dut.reset.value = 0
-    await FallingEdge(dut.clk)
-    dut._log.info(f' state={dut.current_state.value} inp={dut.inp_bit.value} ')
-    cocotb.log.info('#### CTB: Develop your test here! ######')
-
-    dut.inp_bit.value = 1
-    await FallingEdge(dut.clk)
-    dut._log.info(f'inp={dut.inp_bit.value} state={dut.current_state.value} out={dut.seq_seen.value} ')
-    dut.inp_bit.value = 0
-    await FallingEdge(dut.clk)
-    dut._log.info(f'inp={dut.inp_bit.value} state={dut.current_state.value} out={dut.seq_seen.value} ')
-    dut.inp_bit.value=1
-    await FallingEdge(dut.clk)
-    dut._log.info(f'inp={dut.inp_bit.value} state={dut.current_state.value} out={dut.seq_seen.value}')
-    dut.inp_bit.value=0
-    await FallingEdge(dut.clk)
-    dut._log.info(f'inp={dut.inp_bit.value} state={dut.current_state.value} out={dut.seq_seen.value}')
-    dut.inp_bit.value=1
-    await FallingEdge(dut.clk)
-    dut._log.info(f'inp={dut.inp_bit.value} state={dut.current_state.value} out={dut.seq_seen.value} ')
-    dut.inp_bit.value=1
-    await FallingEdge(dut.clk)
-    dut._log.info(f'inp={dut.inp_bit.value} state={dut.current_state.value} out={dut.seq_seen.value}')
-   
-    try:
-            assert dut.seq_seen.value == 1, "error"
-    except:
-            errors.append(dut.seq_seen.value)
-            dut._log.info(f'ERROR at input={dut.inp_bit.value} state={dut.current_state.value} out={dut.seq_seen.value} expected_output={1}')
-            dut._log.info(f'BUG_3 Sequence is not at all detected even in same clock cycle. Bug in state transition')
-    dut._log.info(f'total bug = {(len(errors))}')
-    assert len(errors) == 0, "error"
+    assert dut.alarm.value==1, "alarm doesnt go high at count={count}".format(count=dut.count.value)
     
 
+    
+
+ 
     

@@ -63,7 +63,7 @@ begin
             if(count<3)
                next_state=wait_pass;
           else if (count>=3)
-               alarm=1;
+               
             next_state=wait_pass;
         end
   endcase
