@@ -1,7 +1,7 @@
-module password(access,alarm,in,reset,clk);
-parameter [31:0]pass = 'h1234abcd;
+module password_based_lock(access,alarm,inp,reset,clk);
+parameter [3:0]pass = 1234;
 output access,alarm;						
-input [31:0]in;
+input [13:0]inp;
 input reset;
 input clk;
 parameter idle=3'b000, wait_pass=3'b001, access_state=3'b010, denied=3'b011;
@@ -9,9 +9,7 @@ reg[2:0] current_state, next_state;
 reg access,condition,alarm;							
 integer count;
   
-initial begin
-  $monitor($time," Access=%b,Alarm=%b,Input=%h,Reset=%b,State=%b,count=%d, ",access,alarm,in,reset,current_state,count);
-end
+
   
 initial 
 begin
@@ -46,7 +44,7 @@ begin
        wait_pass:
         begin
             access<=0;
-            if(in==pass)
+            if(inp==pass)
                next_state=access_state;
             else 
                next_state=denied;
