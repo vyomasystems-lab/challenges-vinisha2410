@@ -40,3 +40,4 @@ Output mismatches for the above inputs proving that there is a design bug
 All the values of instruction provided in the model has been given to mav_putvalue_instr and mav_putvalue_src1,mav_putvalue_src2, mav_putvalue_src3 were assigned random values and the design was checked for all possible instruction values.
 
 ## Is the verification complete ?
+YES, the design has been tasted with all possible values for mav_putvalue_instr
