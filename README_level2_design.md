@@ -2,7 +2,7 @@
 
 The verification environment is setup using [Vyoma's UpTickPro](https://vyomasystems.com) provided for the hackathon.
 
-![](https://i.imgur.com/miWGA1o.png)
+![]([https://i.imgur.com/miWGA1o.png](https://github.com/vyomasystems-lab/challenges-vinisha2410/blob/master/images/Gitpod%20id.png))
 
 ## Verification Environment
 
@@ -23,17 +23,20 @@ The assert statement is used for comparing the dut_output to the expected output
 The assert statement outside the for loop checks if there's any bugs appended to 'errors'. If len(errors) is not equal to zero, the whole test fails. The following error is seen:
 
 The following error is seen:
+![](https://github.com/vyomasystems-lab/challenges-vinisha2410/blob/master/images/level2_failed_test.png)
+![](https://github.com/vyomasystems-lab/challenges-vinisha2410/blob/master/images/level2_failed_test%20(2).png)
 ```
-assert dut.sum.value == A+B, "Adder result is incorrect: {A} + {B} != {SUM}, expected value={EXP}".format(
-                     AssertionError: Adder result is incorrect: 7 + 5 != 2, expected value=12
+assert len(errors) == 0, "test fails"
+                     AssertionError: test fails
 ```
 ## Test Scenario 
 - Test Inputs: mav_putvalue_instr=40007033
-- Expected Output: sum=12
-- Observed Output in the DUT dut.sum=2
+- Expected Output: 0xc420010b
+- Observed Output: 0x1840c005
 
 Output mismatches for the above inputs proving that there is a design bug
 
 ## Verification Strategy
+All the values of instruction provided in the model has been given to mav_putvalue_instr and mav_putvalue_src1,mav_putvalue_src2, mav_putvalue_src3 were assigned random values and the design was checked for all possible instruction values.
 
 ## Is the verification complete ?
