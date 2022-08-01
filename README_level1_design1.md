@@ -8,7 +8,7 @@ The verification environment is setup using [Vyoma's UpTickPro](https://vyomasys
 
 The [CoCoTb](https://www.cocotb.org/) based Python test is developed as explained. The test drives inputs to the Design Under Test (mux module) which has 5-bit select line *sel* and thirty one 2-bit inputs *inp0*, *inp1*.. till *inp30*. Depending on *sel* value, one of the 31 inputs get selected which is then driven to the output *out*.
 
-The out list is created to store in case any bugs are found in design. The inp list is created to store thirty one 2-bit value. The stored values in the list is then assigned to the input port. 
+The out list is created to store values in case any bugs are found in design. The inp list is created to store thirty one 2-bit value. The stored values in the list is then assigned to the input port. 
 
 ```
 dut.inp0.value=inp[0]
@@ -27,8 +27,8 @@ The following error is seen:
 ![](https://github.com/vyomasystems-lab/challenges-vinisha2410/blob/master/images/mux_failed_test.png)
 
 ```
-assert dut.sum.value == A+B, "Adder result is incorrect: {A} + {B} != {SUM}, expected value={EXP}".format(
-                     AssertionError: Adder result is incorrect: 7 + 5 != 2, expected value=12
+ assert len(out) == 0, "error"
+                     AssertionError: error
 ```
 ## Test Scenario 
 - Test Inputs: inp12=1 sel=12
@@ -76,8 +76,10 @@ Based on the above test input and analysing the design, we see the following
 default: out = 0;         ====> BUG2 (No case statement for 30th select line)
 
 ```
-For the mux design, the case statement must be 5'b01100: out = inp12; 
+For the mux design, the case statement must be 5'b01100: out = inp12;
+
 An additional case statement 5'b11110: out = inp30; must be included.
+Therefore there are 2 bugs.
 
 ## Design Fix
 Updating the design and re-running the test makes the test pass.
